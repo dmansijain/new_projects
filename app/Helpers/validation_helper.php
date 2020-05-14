@@ -65,7 +65,7 @@ if(!function_exists('validate_login'))
 
 if(!function_exists('validate_register'))
 {
-	function validate_register($registerdata)
+	function validate_register($registerdata, $device="app")
 	{
 		
 		$errors = array();
@@ -131,21 +131,18 @@ if(!function_exists('validate_register'))
 		} else  {
 			
 		}
-		
-		if($registerdata['device_id'] == "") {
-			$errors['device_id'] = "Device Id is required";
-		}
-		
-		if($registerdata['device_id'] == "") {
-			$errors['device_id'] = "Device Id is required";
-		}
-		
-		if($registerdata['device'] == "") {
-			$errors['device'] = "Device is required";
-		}
-		
-		if($registerdata['fcm_key'] == "") {
-			$errors['fcm_key'] = "Fcm Key is required";
+		if($device == "app") {
+			if($registerdata['device_id'] == "") {
+				$errors['device_id'] = "Device Id is required";
+			}
+			
+			if($registerdata['device'] == "") {
+				$errors['device'] = "Device is required";
+			}
+			
+			if($registerdata['fcm_key'] == "") {
+				$errors['fcm_key'] = "Fcm Key is required";
+			}
 		}
 			return $errors;
 		

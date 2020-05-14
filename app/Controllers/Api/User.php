@@ -11,7 +11,7 @@ class User extends ResourceController
 
     public function __construct()
     {
-        helper(['cookie','common']);
+        helper(['cookie','common','validation']);
 		
     }
 
@@ -267,21 +267,15 @@ class User extends ResourceController
 				
 				
 			}
-			$uservalidate=true;
-			$user_id=$_POST['user_id'];
-if($user_id == ""){			
-			$uservalidate=$this->validate([
-        'email' => 'trim|required|valid_email|is_unique[li_users.email]',
-		'password'  => 'trim|required',
-        'confirmpassword'  => 'trim|required|matches[password]'
-]); }
+					
+			$uservalidate= validate_register($_POST, "web");
 			
-			if(!$uservalidate)
+			if(!empty($uservalidate))
 			{
 				
 				$return['success'] 		= "false";
-				$return['message'] 		= \Config\Services::validation()->listErrors();
-				$return['error'] 		= \Config\Services::validation()->listErrors();
+				$return['message'] 		= $uservalidate;
+				$return['error'] 		= $uservalidate;
 				$return['data'] 		="";			
 				
 				return $this->respond($return);
@@ -825,7 +819,6 @@ if($user_id == ""){
 	public function updatehealthinfo() 
 		{
 			
-			helper('validation');
 			
 		
 		$postData = json_decode(file_get_contents('php://input'), true);
@@ -975,7 +968,7 @@ if($user_id == ""){
 	}
 	
 	public function changepassword(){
-		helper(['validation']);
+		
 		$session = \Config\Services::session();
 		$model = new UserModel();
 		$postData = json_decode(file_get_contents('php://input'), true);

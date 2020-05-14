@@ -65,15 +65,17 @@ class GroupModel extends Model
         return $builder->get()->getRow();
 	}
 	
-	public function get_users_join_group($user_id) {
+	public function get_users_join_group($user_id, $start=0, $limit = "") {
 		$db  = \Config\Database::connect();
         $builder = $db->table('li_groups t1');
-		$builder->select('t1.*, t4.title, COUNT(t5.event_order_id) as members_count')->join('li_events t2', 't2.group_id = t1.id');
+		$builder->select('t1.*, t4.title, COUNT(t5.event_order_id) as members_count, t2.location')->join('li_events t2', 't2.group_id = t1.id');
 		$builder->join('li_event_orders t3','t3.event_id = t2.id');
 		$builder->join('li_event_community t4','t4.id = t1.community');
 		$builder->join('li_event_orders t5','t5.event_id = t2.id');
 		$builder->where('t3.user_id', $user_id)->where('t3.is_group', 1);
-		
+		if($limit) {
+			$builder->limit($limit, $start);
+		}
         return $builder->get()->getResult();
 	}
 	

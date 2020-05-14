@@ -1921,6 +1921,8 @@ invite_code:'',
 		if($scope.eventinfo.event_category !== ""){
 			$scope.submittype 	= {id:"",title:'', cat_id : $scope.eventinfo.event_category};
 			$scope.submittypename 	= {id:"",title:'', cat_id : $scope.eventinfo.event_category, event_type : '',};
+			$scope.eventinfo.event_type = "";
+			$scope.eventinfo.event_typename = "";
 		}
 	}
      $scope.choices = [''];
@@ -2027,6 +2029,7 @@ invite_code:'',
 	$scope.getEventType = function() {
 		 if ($scope.eventinfo.event_type !== "") {
 			 $scope.submittypename 	= {id:"",title:'', cat_id : $scope.eventinfo.event_category, event_type : $scope.eventinfo.event_type};
+			 $scope.eventinfo.event_typename = "";
 			  var formData = {'id': $scope.eventinfo.event_type};
 			   $http.post(BASE_URL+'api/event/geteventtypeByid', formData)
 		   .then(function(response) {

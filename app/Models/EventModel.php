@@ -417,7 +417,7 @@ public function get_user_past_events($user_id, $start= 0, $limit="") {
 		public function get_skills_requirement_events($user_id, $event_cat="", $type="", $orderby="", $keyword="", $skill="", $start= 0, $limit=""){
 			$db  = \Config\Database::connect();
         $builder = $db->table('li_events t1')->select('t1.*,t2.*, t3.title, t4.title as cattitle, t5.title as typetitle, t6.title as communitytitle')->join('li_event_orders t2', 't2.event_id = t1.id');
-		$builder->join('li_eventtype_name t3', 't3.id = t1.event_typename');
+		$builder->join('li_eventtype_name t3', 't3.id = t1.event_typename','LEFT');
 		$builder->join('li_eventcategory t4', 't4.id = t1.event_category');
 		$builder->join('li_eventtype t5', 't5.id = t1.event_type');
 		$builder->join('li_event_community t6', 't6.id = t1.event_community');

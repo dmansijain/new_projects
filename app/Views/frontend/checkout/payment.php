@@ -123,7 +123,7 @@
 								<div class="col-md-6" ng-show="paymentinfo.payment_type !='paymentplan'">
 								<input type="radio"  id="payviacheck" name="gateway" value="payviacheck" ng-model="paymentinfo.gateway" checked>
 
-								<label for="payviacheck">Pay Via Check</label>
+								<label for="payviacheck">Pay Via Cheque</label>
 								</div>
 								</div>
 								</div>
@@ -154,7 +154,7 @@
             <div class="modal-content" id="">
               
                     <div class="modal-header text-center">
-                        <h4 class="modal-title w-100 font-weight-bold">Pay Via Check</h4>
+                        <h4 class="modal-title w-100 font-weight-bold">Pay Via Cheque</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

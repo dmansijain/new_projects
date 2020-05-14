@@ -1967,6 +1967,7 @@ margin-bottom:5px;
 #profile-tab #tabs .nav-item a  {
 	margin:4px;
 	font-size:15px;
+	white-space: nowrap;
 }
 .change-password-link {
 	float:right;
@@ -2010,7 +2011,18 @@ margin-bottom:5px;
     margin-bottom: 20px;
     cursor: pointer;
 }
-
+.modal-registration{overflow:auto;}
+.errors ul {
+	margin:0 0 15px 0;
+	padding:0;
+}
+.errors ul li {
+	color:#f00;
+}
+a.step-heading {
+	color:#000;
+	cursor:default;
+}
 /* media query 
 -----------------------------*/
 @media screen and (max-width:1200px) {
@@ -2052,6 +2064,7 @@ margin-bottom:5px;
 	.table_community .scrollSlt {overflow-x: auto;float: left;width: 100%;}
 	.table_community .scrollSlt {width: auto;}
 	.tb-figure {display:none;} 
+	.form-control:focus{background-color:#f1f1f1;}
 }
 @media(min-width:768px) {
 	.nav-tabs {display: flex;}
@@ -2188,6 +2201,11 @@ margin-bottom:5px;
 	.about-content-tb th{width:130px;padding-right:10px;}
 	.tab-design .nav-tabs.view-map-tab .nav-item {width:auto !important;}
 	.tab-design .nav-tabs.view-map-tab .nav-item a{padding:0;line-height:36px;}
+	.owl-item .item {text-align:center;}
+	#mapview {margin-top:20px;}
+	.table-bordered td:first-child, .table-bordered th:first-child {border-left:none;}
+	.table-bordered td:last-child, .table-bordered th:last-child{border-right:none;}
+	.table-responsive > table{background:#f9f9f9;}
 }
 
 @media (max-width: 575.98px) {
@@ -2216,6 +2234,9 @@ margin-bottom:5px;
 	.set-mob .Searchskill  {width:100%;margin-bottom:15px;}
 	#services .icon img {max-width:34%;}
 	.change-password-link  {float:left;margin-top:10px;}
+	.tab-design .nav-item a{padding:5px;}
+	.tab-design .nav-item{width:100% !important;}
+	.frm-grp-profile .change-password-link  {float:right;}
 }
 @media (max-width: 380px) {
 	.explore h2, #intro h2 {font-size:18px;line-height:26px;}

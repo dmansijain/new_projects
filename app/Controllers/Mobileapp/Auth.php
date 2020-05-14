@@ -3,6 +3,7 @@ use App\Models\LoginModel;
 use App\Models\UserModel;
 use App\Models\DeviceModel;
 use App\Models\EventModel;
+use App\Models\GroupModel;
 use CodeIgniter\RESTful\ResourceController;
 use App\Libraries\Paypal;
 use App\Libraries\Liminaltokenlib;
@@ -696,7 +697,11 @@ class Auth extends ResourceController
 				$model = new EventModel();
 				$users_upcoming_event = $model->get_user_upcoming_events($user_id);
 				$allupcomingevents = $model->get_user_upcoming_events($user_id, $event_cat="", $type="", $orderby="", $keyword="", $skill="", $start, $limit);
+				
 				 foreach($allupcomingevents as $key=>$upcomingevents) {
+					 
+						$upcomingevents->title = $upcomingevents->title ? $upcomingevents->title : $upcomingevents->event_typename;
+					
 					$paymentids = unserialize($upcomingevents->payment_id);
 					$paymentdata = $model->get_payment_by_payment_id(end($paymentids));
 					
@@ -771,7 +776,15 @@ class Auth extends ResourceController
 			$model = new EventModel();
 			$allskillsevent    = $model->get_skills_requirement_events($user_id);
 			$skillsevent    = $model->get_skills_requirement_events($user_id, $event_cat="", $type="", $orderby="", $keyword="", $skill="", $start, $limit);
-				$total_page = ceil(count($allskillsevent)/$limit);
+			$total_page = ceil(count($allskillsevent)/$limit);
+			
+			foreach($skillsevent as $skill_event){
+				
+					$skill_event->title = $skill_event->title ? $skill_event->title : $skill_event->event_typename;
+					
+			}
+			
+			
 			if($skillsevent)
 			{
 				$return['success'] 		= "true";
@@ -849,6 +862,13 @@ class Auth extends ResourceController
 					
 					$total_page = ceil(count($allevents)/$limit);
 					
+					foreach($events as $event){
+				
+						$event->title = $event->title ? $event->title : $event->event_typename;
+					
+					}
+			
+					
 					}
 					
 					if($events) {
@@ -900,6 +920,9 @@ class Auth extends ResourceController
 				$users_upcoming_event = $model->get_user_upcoming_events($user_id);
 				$allupcomingevents = $model->get_user_upcoming_events($user_id, $event_cat="", $type="", $orderby="", $keyword="", $skill="", $start= 0, $limit);
 				 foreach($allupcomingevents as $key=>$upcomingevents) {
+					 
+					 $upcomingevents->title = $upcomingevents->title ? $upcomingevents->title : $upcomingevents->event_typename;
+					 
 					$paymentids = unserialize($upcomingevents->payment_id);
 					$paymentdata = $model->get_payment_by_payment_id(end($paymentids));
 					
@@ -925,6 +948,12 @@ class Auth extends ResourceController
 				$allskillsevent    = $model->get_skills_requirement_events($user_id);
 				$skillsevent    = $model->get_skills_requirement_events($user_id, $event_cat="", $type="", $orderby="", $keyword="", $skill="", $start= 0, $limit);
 				
+				foreach($skillsevent as $skill_event){
+				
+					$skill_event->title = $skill_event->title ? $skill_event->title : $skill_event->event_typename;
+					
+				}
+				
 				$allevents = $model->get_registered_events_by_user($user_id);
 					
 					$userevents = array();
@@ -944,8 +973,14 @@ class Auth extends ResourceController
 					$events = array();
 					$allevents = array();
 					if(!empty($eventparticipants)) { 
-					$allevents = $model->get_partcipate_users_registered_event($userevents, $eventparticipants);
-					$events = $model->get_partcipate_users_registered_event($userevents, $eventparticipants, $event_cat="", $type="", $orderby="", $keyword="", $skill="", $start= 0, $limit);
+						$allevents = $model->get_partcipate_users_registered_event($userevents, $eventparticipants);
+						$events = $model->get_partcipate_users_registered_event($userevents, $eventparticipants, $event_cat="", $type="", $orderby="", $keyword="", $skill="", $start= 0, $limit);
+						foreach($events as $event){
+					
+							$event->title = $event->title ? $event->title : $event->event_typename;
+						
+						}
+						
 					}
 				$myevents['upcoming_events']['events'] = $allupcomingevents;
 				$myevents['upcoming_events']['view_more_btn'] = 0;
@@ -1002,6 +1037,66 @@ class Auth extends ResourceController
 				
 			}
 		}
+		
+		public function get_users_group($user_id) {
+		$LiminaltokenlibObj 	= new Liminaltokenlib();
+		//$LiminaltokenlibObj->validateToken();
+		$page = isset($_GET['per_page']) ? $_GET['per_page'] : 0;
+		$validate = validate_userId($user_id);
+		
+		 if(empty($validate))
+            {
+			$usermodel = new UserModel();
+			$userdetail = $usermodel->getuserDetail($user_id);
+			if(!empty($userdetail)) {
+				$limit =  EVENT_APP_LIMIT;
+				$start = $page * $limit;
+				$model = new GroupModel();
+				$Alldata    = $model->get_users_join_group($user_id, $start, $limit);
+				
+				foreach($Alldata as $key=>$group) {
+					$Alldata[$key]->location = "Meet at ".$group->location;
+				}
+				
+				$totalgroup = $model->get_users_join_group($user_id);
+				$total_page = ceil(count($totalgroup)/$limit);
+				if($Alldata)
+				{
+					$return['success'] 		= "true";
+					$return['message'] 		= "Get All Group list.";
+					$return['page_count'] 		= $total_page;	
+					$return['data'] 		= $Alldata;	
+					$return['error'] 		= $this->error;
+					
+					return $this->respond($return);
+				}
+				
+				else
+				{
+					$return['success'] 		= "false";
+					$return['message'] 		= "groups not found.";
+					$return['error'] 		= "";
+					$return['data'] 		= "";			
+					
+					return $this->respond($return);
+				}	
+			
+			} else {
+				$return['success'] 		= "false";
+				$return['message'] 		= "Invalid user";
+				$return['error'] 		= "";
+				$return['data'] 		= "";			
+				return $this->respond($return);
+			}	
+			} else {
+				$return['success'] 		= "false";
+				$return['message'] 		= "Invalid user";
+				$return['error'] 		= "";
+				$return['data'] 		= "";			
+				return $this->respond($return);
+				
+			}
+	}
 	
 	  public function testPaypal_post()
     {

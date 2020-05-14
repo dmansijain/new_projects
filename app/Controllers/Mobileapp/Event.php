@@ -32,7 +32,9 @@ class Event extends ResourceController
 		$events = $eventmodel->getAlldata($event_cat, $event_type, $orderby, $keyword="", $skill="", $start, $limit);
 		$totalevents = $eventmodel->getAlldata($event_cat, $event_type, $orderby, $keyword="", $skill="");
 		$total_page = ceil(count($totalevents)/$limit);
-		
+		foreach($events as $event) {
+			$event->typenametitle = $event->typenametitle ? $event->typenametitle : $event->event_typename;
+		}
 			//echo "<pre>";print_r($events);exit;
 		if($events) {
 				    $return['success'] 		    = "true";
@@ -60,6 +62,7 @@ class Event extends ResourceController
 			
 			$model = new EventModel();
 			$eventdetail    = $model->getDetail($event_id);
+			$eventdetail->typenametitle = $eventdetail->typenametitle ? $eventdetail->typenametitle : $eventdetail->event_typename;
 			$now = date_create(date('Y-m-d'));
 			$start_date = date_create($eventdetail->start_date);
 			$diff=date_diff($start_date,$now);
@@ -135,7 +138,9 @@ class Event extends ResourceController
 					$totalpastevents = $model->get_user_past_events($user_id);
 					
 					$total_page = ceil(count($totalpastevents)/$limit);
-					
+					foreach($allpastevents as $event) {
+						$event->typenametitle = $event->typenametitle ? $event->typenametitle : $event->event_typename;
+					}
 					//echo "<pre>";print_r($allupcomingevents);exit;
 					if($allpastevents) {
 							$return['success'] 		= "true";
